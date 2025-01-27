@@ -17,6 +17,41 @@ const Profile = () => {
   const dispatch = useDispatch();
   const token = useSelector((state) => state.auth.token);
 
+  const handleCustomRequest = async (options) => {
+    const { file, onSuccess, onError } = options;
+
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const response = await fetch(
+        "https://take-home-test-api.nutech-integrasi.com/profile/image",
+        {
+          method: "PUT",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          body: formData,
+        }
+      );
+
+      const data = await response.json();
+
+      if (data.status === 0) {
+        const uploadedImageUrl = data.data.profile_image;
+        onSuccess(data, file);
+        setImgUrl(uploadedImageUrl);
+        message.success("Profile image berhasil diperbarui!");
+      } else {
+        throw new Error("Failed to upload image");
+      }
+    } catch (error) {
+      console.error(error);
+      onError(error);
+      message.error("Gagal mengunggah gambar. Silakan coba lagi.");
+    }
+  };
+
   const beforeUpload = (file) => {
     const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
     if (!isJpgOrPng) {
@@ -104,11 +139,7 @@ const Profile = () => {
                   maxCount={1}
                   onChange={handleUploadChange}
                   fileList={fileList}
-                  action="https://take-home-test-api.nutech-integrasi.com/profile/image"
-                  headers={{
-                    Authorization: `Bearer ${token}`,
-                  }}
-                  method="PUT"
+                  customRequest={handleCustomRequest}
                   beforeUpload={beforeUpload}
                 >
                   {imgUrl && <img src={imgUrl} alt="photo" />}
@@ -121,12 +152,14 @@ const Profile = () => {
                 {user?.first_name + " " + user?.last_name}
               </p>
             </div>
-            <UpdateProfileForm
-              isFormDisabled={isFormDisabled}
-              token={token}
-              user={user}
-              setLoading={setLoading}
-            />
+            {user && (
+              <UpdateProfileForm
+                isFormDisabled={isFormDisabled}
+                token={token}
+                user={user}
+                setLoading={setLoading}
+              />
+            )}
             <div className="flex flex-col gap-6">
               {isFormDisabled && (
                 <>
