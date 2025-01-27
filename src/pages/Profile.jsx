@@ -142,7 +142,15 @@ const Profile = () => {
                   customRequest={handleCustomRequest}
                   beforeUpload={beforeUpload}
                 >
-                  {imgUrl && <img src={imgUrl} alt="photo" />}
+                  {imgUrl && (
+                    <div className="w-full h-full relative rounded-full overflow-hidden">
+                      <img
+                        src={imgUrl}
+                        alt="photo"
+                        className="object-cover w-full h-full"
+                      />
+                    </div>
+                  )}
                 </Upload>{" "}
                 <div className="absolute right-0.5 bottom-0 rounded-full border border-gray-300 bg-white p-2">
                   <FaPen />
