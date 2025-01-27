@@ -5,6 +5,7 @@ const UserDetail = () => {
   const [user, setUser] = useState();
   const [imgUrl, setImgUrl] = useState();
   const [balance, setBalance] = useState();
+  const [isBalanceHidden, setIsBalanceHidden] = useState(true);
 
   const token = useSelector((state) => state.auth.token);
 
@@ -87,11 +88,18 @@ const UserDetail = () => {
       <div className="px-8 pt-7 pb-[30px] bg-[url(/Background_Saldo.png)] bg-cover w-[680px] flex flex-col gap-4">
         <p className="text-white text-sm">Saldo anda</p>
         <p className="text-white text-3xl mb-[1px]">
-          {balance?.balance.toLocaleString("id-ID", {
-            maximumFractionDigits: 0,
-          })}
+          {isBalanceHidden
+            ? "***"
+            : `${balance?.balance.toLocaleString("id-ID", {
+                maximumFractionDigits: 0,
+              })}`}
         </p>
-        <p className="text-white text-xs">Lihat Saldo</p>
+        <div
+          className="text-white text-xs hover:cursor-pointer w-fit pr-5"
+          onClick={() => setIsBalanceHidden(!isBalanceHidden)}
+        >
+          Lihat Saldo
+        </div>
       </div>
     </section>
   );
