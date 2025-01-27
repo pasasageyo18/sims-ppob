@@ -68,7 +68,15 @@ const UserDetail = () => {
   return (
     <section id="user-detail" className="flex justify-between items-center">
       <div className="flex flex-col gap-4">
-      {imgUrl && <img src={imgUrl} alt="photo" width={40} height={40} />}
+        {imgUrl && (
+          <div className="w-14 h-14 relative rounded-full border border-gray-200 overflow-hidden">
+            <img
+              src={imgUrl}
+              alt="photo"
+              className="object-cover w-full h-full"
+            />
+          </div>
+        )}
         <div className="flex flex-col gap-2">
           <p className="text-lg">Selamat datang,</p>
           <p className="font-semibold text-3xl">
